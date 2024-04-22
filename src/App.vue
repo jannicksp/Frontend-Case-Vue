@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import TestProducts from './components/TestProducts.vue'
 </script>
 
 <template>
   <div>
   </div>
-  <HelloWorld msg="Frontend Case Vue" />
+  <TestProducts msg="Frontend Case Vue" />
 </template>
 
 <style scoped>
