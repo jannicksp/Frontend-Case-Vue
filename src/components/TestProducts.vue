@@ -24,23 +24,28 @@ interface Product {
 const products = ref<Product[]>([])
 const selectedProduct = ref<Product | null>(null)
 
+// Error handling function
+const handleError = (error: unknown) => {
+  console.error('Error:', error)
+}
+
 // Fetch products from API
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('https://fakestoreapi.com/products')
+    const response = await axios.get<Product[]>('https://fakestoreapi.com/products')
     products.value = response.data
   } catch (error) {
-    console.error('Error fetching products:', error)
+    handleError(error)
   }
 }
 
 // Fetch a single product by ID
 const fetchProductById = async (id: number) => {
   try {
-    const response = await axios.get(`https://fakestoreapi.com/products/${id}`)
+    const response = await axios.get<Product>(`https://fakestoreapi.com/products/${id}`)
     selectedProduct.value = response.data
   } catch (error) {
-    console.error('Error fetching product details:', error)
+    handleError(error)
   }
 }
 
@@ -56,14 +61,13 @@ const selectProduct = (id: number) => {
 const goBackToList = () => {
   selectedProduct.value = null
 }
-
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
   <div v-if="selectedProduct">
-    <h2> Details about products</h2>
+    <h2>Details about product</h2>
     <!-- Product Details View -->
     <div>
       <div class="flex-product">
@@ -72,8 +76,8 @@ const goBackToList = () => {
           <h2>{{ selectedProduct.title }}</h2>
           <p>{{ Math.floor(selectedProduct.price * 6.87) }} kr.</p>
           <p>{{ selectedProduct.description }}</p>
-          <p> Category: {{ selectedProduct.category }}</p>
-          <p> Rating: {{ selectedProduct.rating.rate }} based on {{ selectedProduct.rating.count }} Reviews</p>
+          <p>Category: {{ selectedProduct.category }}</p>
+          <p>Rating: {{ selectedProduct.rating.rate }} based on {{ selectedProduct.rating.count }} Reviews</p>
           <button @click="goBackToList">Back to List</button>
         </div>
       </div>
@@ -81,7 +85,7 @@ const goBackToList = () => {
   </div>
 
   <div v-else>
-    <h2> List of all products</h2>
+    <h2>List of all products</h2>
     <div class="wrapper">
       <!-- Product List View -->
       <div v-for="product in products" :key="product.id" class="card">
@@ -91,11 +95,9 @@ const goBackToList = () => {
           <p>{{ Math.floor(product.price * 6.87) }} kr.</p>
           <button class="button" @click="selectProduct(product.id)">Køb</button>
         </div>
-
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -155,7 +157,6 @@ const goBackToList = () => {
 .truncate:hover {
   white-space: wrap;
 }
-
 
 .card:hover {
   transform: translateY(-5px);
